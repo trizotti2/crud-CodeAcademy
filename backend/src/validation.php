@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Confere se o id foi informado como uma string não vazia composta apenas por dígitos.
+ * A função valida o formato; não consulta o arquivo para verificar se o usuário existe.
+ * Esta implementação aceita "0", apesar de a mensagem de erro mencionar inteiro positivo.
+ *
+ * @param mixed $id Valor recebido da query string.
+ * @return string|null Mensagem de erro, ou null se o formato for aceito.
+ */
 function validateUserId(mixed $id): ?string
 {
     if ($id === null || $id === '') {
@@ -14,6 +22,14 @@ function validateUserId(mixed $id): ?string
     return null;
 }
 
+/**
+ * Identifica campos obrigatórios ausentes ou com valor null usando isset().
+ * Reúne os nomes que faltam em uma mensagem; a validação dos valores ocorre separadamente.
+ *
+ * @param array $input Dados enviados pelo cliente.
+ * @param array $fields Nomes dos campos que devem estar presentes.
+ * @return string|null Mensagem com os campos faltantes, ou null se todos estiverem presentes.
+ */
 function validateRequiredFields(array $input, array $fields): ?string
 {
     $missing = [];
@@ -33,6 +49,15 @@ function validateRequiredFields(array $input, array $fields): ?string
     return null;
 }
 
+/**
+ * Valida somente os campos presentes: nome, idade e formato do e-mail.
+ * O nome deve ser texto não vazio com até 100 caracteres; a idade numérica é convertida
+ * para inteiro e deve ficar entre 1 e 150; o e-mail deve passar por FILTER_VALIDATE_EMAIL.
+ * Não altera o array recebido; devolve o primeiro erro encontrado.
+ *
+ * @param array $input Campos enviados para criação ou edição.
+ * @return string|null Mensagem do primeiro erro, ou null se os valores verificados forem válidos.
+ */
 function validateUserFields(array $input): ?string
 {
     if (isset($input['name'])) {
